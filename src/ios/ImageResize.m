@@ -173,64 +173,40 @@
     directory = [self getUrl:directory];
     NSInteger quality = [[options objectForKey:@"quality"] integerValue];
     bool photoAlbum = [[options objectForKey:@"photoAlbum"] boolValue];
-    if (photoAlbum == YES) {
-        UIImageWriteToSavedPhotosAlbum(img, self, @selector(imageSavedToPhotosAlbum:didFinishSavingWithError:contextInfo:), nil);
-        return true;
-    } else {
-        NSData* imageDataObject = nil;
-        if ([format isEqualToString:@"jpg"]) {
-            imageDataObject = UIImageJPEGRepresentation(img, (quality/100.f));
-        } else {
-            imageDataObject = UIImagePNGRepresentation(img);
-        }
-        
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *documentsDirectory = [paths objectAtIndex:0];
-        
-        NSMutableString* fullFileName;
-        if (![directory isEqualToString:@""]) {
-            fullFileName = [NSMutableString stringWithString: directory];
-            if (![[NSFileManager defaultManager] fileExistsAtPath:fullFileName]) {
-                NSError *error = nil;
-                [[NSFileManager defaultManager] createDirectoryAtPath:fullFileName withIntermediateDirectories:NO attributes:nil error:&error];
-            }
-        } else {
-            fullFileName = [NSMutableString stringWithString: documentsDirectory];
-        }
-        
-        [fullFileName appendString:@"/"];
-        [fullFileName appendString:filename];
-        NSRange r = [filename rangeOfString:format options:NSCaseInsensitiveSearch];
-        if (r.location == NSNotFound) {
-            [fullFileName appendString:@"."];
-            [fullFileName appendString:format];
-        }
-        NSError *error = nil;
-        bool written = [imageDataObject writeToFile:fullFileName options:NSDataWritingAtomic error:&error];
-        if (!written) {
-            NSLog(@"Write returned error: %@", [error localizedDescription]);
-        }
-        return written;
-    }
-}
-
-- (void) imageSavedToPhotosAlbum:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
-    NSString *message;
-    NSString *title;
-    if (!error) {
-        title = NSLocalizedString(@"Image Saved", @"");
-        message = NSLocalizedString(@"The image was placed in your photo album.", @"");
-    }
-    else {
-        title = NSLocalizedString(@"Error", @"");
-        message = [error description];
-    }
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                    message:message
-                                                   delegate:nil
-                                          cancelButtonTitle:@"OK"
-                                          otherButtonTitles:nil];
-    [alert show];
+	NSData* imageDataObject = nil;
+	if ([format isEqualToString:@"jpg"]) {
+		imageDataObject = UIImageJPEGRepresentation(img, (quality/100.f));
+	} else {
+		imageDataObject = UIImagePNGRepresentation(img);
+	}
+	
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *documentsDirectory = [paths objectAtIndex:0];
+	
+	NSMutableString* fullFileName;
+	if (![directory isEqualToString:@""]) {
+		fullFileName = [NSMutableString stringWithString: directory];
+		if (![[NSFileManager defaultManager] fileExistsAtPath:fullFileName]) {
+			NSError *error = nil;
+			[[NSFileManager defaultManager] createDirectoryAtPath:fullFileName withIntermediateDirectories:NO attributes:nil error:&error];
+		}
+	} else {
+		fullFileName = [NSMutableString stringWithString: documentsDirectory];
+	}
+	
+	[fullFileName appendString:@"/"];
+	[fullFileName appendString:filename];
+	NSRange r = [filename rangeOfString:format options:NSCaseInsensitiveSearch];
+	if (r.location == NSNotFound) {
+		[fullFileName appendString:@"."];
+		[fullFileName appendString:format];
+	}
+	NSError *error = nil;
+	bool written = [imageDataObject writeToFile:fullFileName options:NSDataWritingAtomic error:&error];
+	if (!written) {
+		NSLog(@"Write returned error: %@", [error localizedDescription]);
+	}
+	return written;
 }
 
 @end
