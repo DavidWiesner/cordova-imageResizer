@@ -172,7 +172,6 @@
     NSString *directory =  [options objectForKey:@"directory"];
     directory = [self getUrl:directory];
     NSInteger quality = [[options objectForKey:@"quality"] integerValue];
-    bool photoAlbum = [[options objectForKey:@"photoAlbum"] boolValue];
 	NSData* imageDataObject = nil;
 	if ([format isEqualToString:@"jpg"]) {
 		imageDataObject = UIImageJPEGRepresentation(img, (quality/100.f));
