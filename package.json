@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wymsee/cordova-imageResizer.git"
+    "url": "git+https://github.com/DavidWiesner/cordova-plugin-image-resizer"
   },
   "keywords": [
     "cordova",
